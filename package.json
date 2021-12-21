@@ -1,0 +1,21 @@
+{
+  "name": "blockchain-tx-project",
+  "version": "0.0.1",
+  "author": {
+    "name": "Blockchain",
+    "url": "https://blockchain.com"
+  },
+  "homepage": "https://github.com/schnogz/blockchain-tx-project",
+  "bugs": {
+    "url": "https://github.com/schnogz/blockchain-tx-project/issues"
+  },
+  "private": true,
+  "description": "Take home interview project server.",
+  "scripts": {
+    "serve": "node server/index.js"
+  },
+  "devDependencies": {
+    "cors": "2.8.5",
+    "express": "4.17.1"
+  }
+}
