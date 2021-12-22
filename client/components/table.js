@@ -1,6 +1,7 @@
-import { useDispatch, useSelector } from "react-redux";
 import React, {useEffect} from 'react';
 import server from "../environment";
+import { fetchApi } from '../redux/store';
+import { useDispatch, useSelector } from "react-redux";
 
 const people = [
         { name: 'Jane Cooper', title: 'Regional Paradigm Technician', role: 'Admin', email: 'jane.cooper@example.com' },
@@ -9,10 +10,32 @@ const people = [
   
 const Table = () => {
 
-    useEffect(() => {
-        console.log(server.ethApiUrl)
+    const dispatch = useDispatch();
+    const store = useSelector(state => state);
 
-    });
+    useEffect(() => {
+        //fetch
+        Promise.all([
+            fetch(server.ethApiUrl),
+            fetch(server.custodialApiUrl),
+            fetch(server.btcApiUrl)
+        ]).then(function (responses) {
+            // Get a JSON object from each of the responses
+            return Promise.all(responses.map(function (response) {
+                return response.json();
+            }));
+        }).then(function (data) {
+
+            //send data to redux
+            dispatch(fetchApi(data));
+            console.log(store)
+
+
+        }).catch(function (error) {
+            console.log(error);
+        });
+       
+    }, [dispatch])
 
     return (
         <div className="flex flex-col">

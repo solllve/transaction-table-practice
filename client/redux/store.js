@@ -1,14 +1,14 @@
 import { configureStore, createSlice, nanoid, createAsyncThunk } from "@reduxjs/toolkit";
 
 export const fetchApi = data => ({
-    type: 'fetchEthAction',
+    type: 'fetchAction',
     payload: {
         data
     }
 })
 
-function getEthTransactions(state = {}, action) {
-    if (action.type === 'fetchEthAction') {
+function getTransactions(state = {}, action) {
+    if (action.type === 'fetchAction') {
         return {
         ...state,
         data: action.payload.data
@@ -20,7 +20,7 @@ function getEthTransactions(state = {}, action) {
 const store = configureStore(
     {
       reducer: {
-        ethTransactions: getEthTransactions
+        transactions: getTransactions
       },
     }
 );
