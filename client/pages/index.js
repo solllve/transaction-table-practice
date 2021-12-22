@@ -5,7 +5,7 @@ import Table from '../components/table'
 export default function Home() {
   return (
     <div className={styles.container}>
-      <p>placeholder</p>
+      <h2>My transactions</h2>
       <Table></Table>
     </div>
   )
