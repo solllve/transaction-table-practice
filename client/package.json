@@ -25,6 +25,7 @@
     "babel-jest": "^27.4.5",
     "babel-preset-env": "^1.7.0",
     "babel-preset-react": "^6.24.1",
+    "bitcoin-address-validation": "^2.2.0",
     "enzyme": "^3.11.0",
     "eslint": "8.5.0",
     "eslint-config-next": "12.0.7",

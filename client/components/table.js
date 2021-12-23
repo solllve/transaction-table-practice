@@ -24,6 +24,25 @@ const sortByDecendingDate = (data) => {
     })
 }
 
+const formatDate = (date) => {
+    date.forEach(item => {
+        let dateParse = new Date(item.date).toLocaleDateString("en-US")
+        item.date = dateParse
+    })
+}
+
+const formatCryptoData = (data) => {
+    
+    data.forEach(item => {
+        //if eth
+        if (web3.utils.isAddress(item.to) || web3.utils.isAddress(item.from)) {
+            let ethFormat = web3.utils.fromWei(String(item.amountCrypto), 'ether');
+            item.amountCrypto = Number(ethFormat).toFixed(7)
+        }
+    })
+
+}
+
 const getDate = (item) => {
     if (typeof item.createdAt === 'string') {
         let parseDate = Date.parse(item.createdAt);
@@ -32,7 +51,6 @@ const getDate = (item) => {
     // check if eths
     else if (typeof item.insertedAt === 'number') {
         let timeConvert = String(item.insertedAt) + '000';
-        //let dateParse = new Date(Number(timeConvert)).toLocaleDateString("en-US")
         return Number(timeConvert);
     }
     else {
@@ -42,10 +60,11 @@ const getDate = (item) => {
   
 const transactionFormat = (data) => {
     const rawData = data[0].concat(data[1], data[2]);
-    //console.log(rawData);
+    console.log(rawData);
     const cleanedData = []
     rawData.forEach(item => {
         cleanedData.push({
+            type: item.type,
             to: item.to,
             from: item.from,
             amountFiat: item.fiatValue,
@@ -54,11 +73,11 @@ const transactionFormat = (data) => {
             status: item.state
         })
     })
-    
+    //order of operations
     sortByDecendingDate(cleanedData)
-
+    formatDate(cleanedData)
+    formatCryptoData(cleanedData)
     console.log(cleanedData)
-
 }
 
 const rawDataCount = (data) => {
@@ -76,10 +95,7 @@ const Table = () => {
     const store = useSelector(state => state);
 
     useEffect(() => {
-        //order of operations
-        //check resonse of server
-        //check response of web3
-        //check response of btc
+
         Promise.all([
             fetch(server.ethApiUrl),
             fetch(server.custodialApiUrl),
@@ -91,19 +107,8 @@ const Table = () => {
             }));
 
         }).then(function (data) {
-            //check eth response
-
-            //items in
-            //arrayOfEthDates(data)
-            // var date = new Date();
-
-            // console.log(new Date(1606360936).toLocaleDateString("en-US"))
-            // console.log(rawDataCount(data))
-
-            // const arrayOfEthPromises = [];
 
             transactionFormat(data)
-
             
         }).catch(function (error) {
             console.log(error);
