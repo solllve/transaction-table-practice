@@ -2,6 +2,7 @@ import React, {useEffect} from 'react';
 import server from "../environment";
 import { fetchApi } from '../redux/store';
 import { useDispatch, useSelector } from "react-redux";
+import { validate, getAddressInfo } from 'bitcoin-address-validation';
 import Web3 from 'web3'
 const web3 = new Web3(new Web3.providers.HttpProvider('https://cloudflare-eth.com'));
 
@@ -32,15 +33,19 @@ const formatDate = (date) => {
 }
 
 const formatCryptoData = (data) => {
-    
     data.forEach(item => {
         //if eth
         if (web3.utils.isAddress(item.to) || web3.utils.isAddress(item.from)) {
             let ethFormat = web3.utils.fromWei(String(item.amountCrypto), 'ether');
             item.amountCrypto = Number(ethFormat).toFixed(7)
         }
+        //if btc
+        else if (validate(item.to) || validate(item.from)) {
+            let btcFormat = Number(item.amountCrypto) / 100000000;
+            let btcFormatFixed = btcFormat.toFixed(8); 
+            item.amountCrypto = btcFormatFixed
+        }
     })
-
 }
 
 const getDate = (item) => {
