@@ -2,40 +2,114 @@ import React, {useEffect} from 'react';
 import server from "../environment";
 import { fetchApi } from '../redux/store';
 import { useDispatch, useSelector } from "react-redux";
+import Web3 from 'web3'
+const web3 = new Web3(new Web3.providers.HttpProvider('https://cloudflare-eth.com'));
 
 const people = [
-        { name: 'Jane Cooper', title: 'Regional Paradigm Technician', role: 'Admin', email: 'jane.cooper@example.com' },
-        // More people...
-    ]
+    { name: 'Jane Cooper', title: 'Regional Paradigm Technician', role: 'Admin', email: 'jane.cooper@example.com' },
+    // More people...
+]
+
+const getEthTimestamp = (blockNum) => {
+    let blockParse = Number(blockNum)
+    const block = web3.eth.getBlock(blockParse);
+    block.then(data => {
+        return data.timestamp
+    });
+}
+
+const sortByDecendingDate = (data) => {
+    data.sort((a, b) => {
+        return b.date - a.date
+    })
+}
+
+const getDate = (item) => {
+    if (typeof item.createdAt === 'string') {
+        let parseDate = Date.parse(item.createdAt);
+        return parseDate;
+    }
+    // check if eths
+    else if (typeof item.insertedAt === 'number') {
+        let timeConvert = String(item.insertedAt) + '000';
+        //let dateParse = new Date(Number(timeConvert)).toLocaleDateString("en-US")
+        return Number(timeConvert);
+    }
+    else {
+        return 'no date found'
+    }
+}
   
+const transactionFormat = (data) => {
+    const rawData = data[0].concat(data[1], data[2]);
+    //console.log(rawData);
+    const cleanedData = []
+    rawData.forEach(item => {
+        cleanedData.push({
+            to: item.to,
+            from: item.from,
+            amountFiat: item.fiatValue,
+            amountCrypto: item.amount,
+            date: getDate(item),
+            status: item.state
+        })
+    })
+    
+    sortByDecendingDate(cleanedData)
+
+    console.log(cleanedData)
+
+}
+
+const rawDataCount = (data) => {
+    const rawData = data[0].concat(data[1], data[2]);
+    return rawData.length
+}
+
+const arrayOfEthDates = (data) => {
+    return web3.eth.getBlock(blockParse)
+}
+
 const Table = () => {
 
     const dispatch = useDispatch();
     const store = useSelector(state => state);
 
     useEffect(() => {
-        //fetch
+        //order of operations
+        //check resonse of server
+        //check response of web3
+        //check response of btc
         Promise.all([
             fetch(server.ethApiUrl),
             fetch(server.custodialApiUrl),
             fetch(server.btcApiUrl)
         ]).then(function (responses) {
-            // Get a JSON object from each of the responses
+            
             return Promise.all(responses.map(function (response) {
-                return response.json();
+                return response.json()
             }));
+
         }).then(function (data) {
+            //check eth response
 
-            //send data to redux
-            dispatch(fetchApi(data));
-            console.log(store)
+            //items in
+            //arrayOfEthDates(data)
+            // var date = new Date();
 
+            // console.log(new Date(1606360936).toLocaleDateString("en-US"))
+            // console.log(rawDataCount(data))
 
+            // const arrayOfEthPromises = [];
+
+            transactionFormat(data)
+
+            
         }).catch(function (error) {
             console.log(error);
         });
        
-    }, [dispatch])
+    })
 
     return (
         <div className="flex flex-col">
