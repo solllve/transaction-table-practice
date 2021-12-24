@@ -13,26 +13,21 @@ const getEthTimestamp = (blockNum) => {
         return data.timestamp
     });
 }
-
 const sortByDecendingDate = (data) => {
     data.sort((a, b) => {
         return b.date - a.date
     })
 }
-
 const formatDate = (date) => {
     date.forEach(item => {
         let dateParse = new Date(item.date).toLocaleDateString("en-US")
         item.date = dateParse
     })
 }
-
 const truncateWallets = (data) => {
     let walletShort = data.substring(0, 20)
     return walletShort
 }
-
-
 const formatCryptoData = (data) => {
     data.forEach(item => {
         //if eth
@@ -52,13 +47,11 @@ const formatCryptoData = (data) => {
         }
     })
 }
-
 const formatStatus = (data) => {
     if (typeof data === 'string') {
         return data.toLowerCase()
     }
 }
-
 const getDate = (item) => {
     if (typeof item.createdAt === 'string') {
         let parseDate = Date.parse(item.createdAt);
@@ -73,8 +66,6 @@ const getDate = (item) => {
         return 'no date found'
     }
 }
-
-
 const searchTransactions = (data, searchTerm) => {
     //const dispatch = useDispatch();
     if (typeof searchTerm !== '') {
@@ -94,7 +85,6 @@ const searchTransactions = (data, searchTerm) => {
     }
    // dispatch(fetchApi(searchResults));
 }
-  
 const transactionFormat = (data) => {
     const rawData = data[0].concat(data[1], data[2]);
     //console.log(rawData);
@@ -116,17 +106,14 @@ const transactionFormat = (data) => {
     formatCryptoData(cleanedData)
     return cleanedData
 }
-
 const rawDataCount = (data) => {
     //Real world I would do this better.
     const rawData = data[0].concat(data[1], data[2]);
     return rawData.length
 }
-
 const arrayOfEthDates = (data) => {
     return web3.eth.getBlock(blockParse)
 }
-
 const rowTemplate = (item, label) => {
     if (typeof item === 'string') {
         return (
@@ -139,8 +126,6 @@ const rowTemplate = (item, label) => {
         )
     }
 }
-
-
 const Table = () => {
     let i = 0;
     const store = useSelector(state => state);
@@ -173,20 +158,22 @@ const Table = () => {
         }
        
     }, [dispatch]);
-
-
     return (
         <div>
-            <input className="searchBar" type="text" placeholder="Search" onChange={(e) => {
-                let searchTerm = e.target.value;
-                let searchResults = searchTransactions(store.transactions.data, searchTerm)
-                dispatch(fetchApi(searchResults));
-                if (searchTerm == '') {
-                    const initialData = window.sessionStorage.getItem('transactions');
-                    dispatch(fetchApi(JSON.parse(initialData)));
-                }
-                console.log(searchResults)
-            }}></input>
+            <div className="header">
+                <div className="header__inner">
+                <input className="searchBar" type="text" placeholder="Search" onChange={(e) => {
+                    let searchTerm = e.target.value;
+                    let searchResults = searchTransactions(store.transactions.data, searchTerm)
+                    dispatch(fetchApi(searchResults));
+                    if (searchTerm == '') {
+                        const initialData = window.sessionStorage.getItem('transactions');
+                        dispatch(fetchApi(JSON.parse(initialData)));
+                    }
+                    //console.log(searchResults)
+                }}></input>
+                </div>
+            </div>
             <ul role="list" className="transaction__list divide-y divide-gray-700">
             {store.transactions.data.map(item => (
                 <li key={i++} className="py-4 flex">
@@ -201,8 +188,6 @@ const Table = () => {
             ))}
             </ul>
         </div>
-    )
-         
+    )      
 }
-
 export default Table;

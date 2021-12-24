@@ -39,3 +39,13 @@ a {
 .capitalize {
   text-transform: capitalize;
 }
+.header {
+  display: flex;
+  width: 100%;
+  flex-wrap: wrap;
+}
+.header__inner {
+  position: relative;
+  padding: 25px;
+  margin-right: 25px;
+}
