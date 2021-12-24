@@ -60,9 +60,10 @@ const getDate = (item) => {
 
 const searchTransactions = (data, searchTerm) => {
     let searchResults = data.filter(item => {
-        return item.type.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1
+        return item.type.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1 || item.status.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1
     })
     return searchResults
+
 }
   
 const transactionFormat = (data) => {
@@ -124,32 +125,32 @@ const Table = () => {
         }).then(function (data) {
             const transactions = transactionFormat(data)
             //send cleaned data to redux store
-            dispatch(loadedAction(true));
-            dispatch(fetchApi(transactions));
+            // dispatch(loadedAction(true));
+            // dispatch(fetchApi(transactions));
             getData(transactions)
         }).catch(function (error) {
             console.log(error);    
         });
-    }, [dispatch]);
+    }, [dispatch, getData]);
     let i = 0;
     return (
         <div>
-            <input type="text" placeholder="Search" onChange={(e) => {
+            <input className="searchBar" type="text" placeholder="Search" onChange={(e) => {
                 let searchTerm = e.target.value;
                 let searchResults = searchTransactions(dataState, searchTerm)
+                console.log(searchResults)
                 getData(searchResults)
             }}></input>
-
-            <ul>
+            <ul role="list" className="transaction__list divide-y divide-gray-700">
             {dataState.map(item => (
-                <li key={i++}>
-                    <span>{item.type}</span>
-                    <span>{item.status}</span>
-                    <span>{item.to}</span>
-                    <span>{item.from}</span>
-                    <span>{item.amountFiat}</span>
-                    <span>{item.amountCrypto}</span>
-                    <span>{item.date}</span>
+                <li key={i++} className="py-4 flex">
+                    <span className="min-w-0 flex-1 flex items-center">{item.type}</span>
+                    <span className="min-w-0 flex-1 flex items-center">{item.status}</span>
+                    <span className="min-w-0 flex-1 flex items-center">{item.to}</span>
+                    <span className="min-w-0 flex-1 flex items-center">{item.from}</span>
+                    <span className="min-w-0 flex-1 flex items-center">{item.amountFiat}</span>
+                    <span className="min-w-0 flex-1 flex items-center">{item.amountCrypto}</span>
+                    <span className="min-w-0 flex-1 flex items-center">{item.date}</span>
                 </li>
             ))}
             </ul>
