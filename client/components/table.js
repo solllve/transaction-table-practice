@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, setState } from "react";
 import server from "../environment";
 import store, { fetchApi, loadedAction } from '../redux/store';
 import { useDispatch, useSelector } from "react-redux";
@@ -67,10 +67,13 @@ const getDate = (item) => {
 }
 
 const searchTransactions = (data, searchTerm) => {
+
     let searchResults = data.filter(item => {
-        return item.type.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1 || item.status.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1
+        return item.type.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1 || 
+        item.status.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1
     })
     return searchResults
+
 
 }
   
@@ -107,6 +110,7 @@ const arrayOfEthDates = (data) => {
 }
 
 const Table = () => {
+    let i = 0;
     const store = useSelector(state => state);
     const dispatch = useDispatch();
     const [dataState, getData] = useState([
@@ -133,14 +137,14 @@ const Table = () => {
         }).then(function (data) {
             const transactions = transactionFormat(data)
             //send cleaned data to redux store
-            // dispatch(loadedAction(true));
-            // dispatch(fetchApi(transactions));
-            getData(transactions)
+            dispatch(loadedAction(true));
+            dispatch(fetchApi(transactions));
+            getData(store.transactions.data)
+
         }).catch(function (error) {
             console.log(error);    
         });
     }, [dispatch, getData]);
-    let i = 0;
     return (
         <div>
             <input className="searchBar" type="text" placeholder="Search" onChange={(e) => {
@@ -150,7 +154,7 @@ const Table = () => {
                 getData(searchResults)
             }}></input>
             <ul role="list" className="transaction__list divide-y divide-gray-700">
-            {dataState.map(item => (
+            {store.transactions.data.map(item => (
                 <li key={i++} className="py-4 flex">
                     <div className="min-w-0 flex-1 flex items-center">
                         <div className="data__inner">

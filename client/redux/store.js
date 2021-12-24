@@ -14,7 +14,7 @@ export const loadedAction = bool => ({
     }
 })
 
-function getTransactions(state = {}, action) {
+function getTransactions(state = {data: []}, action) {
     if (action.type === 'fetchAction') {
         return {
         ...state,
