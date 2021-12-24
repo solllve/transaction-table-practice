@@ -6,7 +6,7 @@ Build a React application that uses the mocked endpoints in this repo to fetch a
 
 ## How to Generate App
 run `npm i` in /client
-run `npm serve` from root, which will serve both the server and the client.
+run `npm run serve` from root, which will serve both the server and the client.
 
 ## What is inside
 - Nextjs
