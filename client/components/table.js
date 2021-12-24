@@ -57,6 +57,12 @@ const formatCryptoData = (data) => {
     })
 }
 
+const formatStatus = (data) => {
+    if (typeof data === 'string') {
+        return data.toLowerCase()
+    }
+}
+
 const getDate = (item) => {
     if (typeof item.createdAt === 'string') {
         let parseDate = Date.parse(item.createdAt);
@@ -93,13 +99,13 @@ const transactionFormat = (data) => {
     const cleanedData = []
     rawData.forEach(item => {
         cleanedData.push({
-            type: item.type,
+            type: formatStatus(item.type),
             to: item.to,
             from: item.from,
             amountFiat: item.fiatValue,
             amountCrypto: item.amount,
             date: getDate(item),
-            status: item.state
+            status: formatStatus(item.state)
         })
     })
     //order of operations
@@ -160,13 +166,13 @@ const Table = () => {
                     <div className="min-w-0 flex-1 flex items-center">
                         <div className="data__inner">
                             <span className="label">Type:</span>
-                            <span className="value">{item.type}</span>
+                            <span className="value capitalize">{item.type}</span>
                         </div>
                     </div>
                     <div className="min-w-0 flex-1 flex items-center">
                         <div className="data__inner">
                             <span className="label">Status:</span>
-                            <span className="value">{item.status}</span>
+                            <span className="value capitalize">{item.status}</span>
                         </div>
                     </div>
                     <div className="min-w-0 flex-1 flex items-center">

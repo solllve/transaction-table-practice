@@ -36,3 +36,6 @@ a {
 .value {
   word-wrap: break-word;
 }
+.capitalize {
+  text-transform: capitalize;
+}
