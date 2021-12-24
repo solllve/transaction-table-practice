@@ -33,18 +33,21 @@ const formatCryptoData = (data) => {
         if (web3.utils.isAddress(item.to) || web3.utils.isAddress(item.from)) {
             let ethFormat = web3.utils.fromWei(String(item.amountCrypto), 'ether');
             item.amountCrypto = Number(ethFormat).toFixed(7)
-            let walletShortTo = item.to.substring(0, 6) + '...'
-            let walletShortFrom = item.from.substring(0, 6) + '...'
-            item.to = walletShortTo
-            item.from = walletShortFrom  
+     
+                let walletShortTo = item.to.substring(0, 20) 
+                let walletShortFrom = item.from.substring(0, 20)
+                item.to = walletShortTo
+                item.from = walletShortFrom 
+            
+             
         }
         //if btc
         else if (validate(item.to) || validate(item.from)) {
             let btcFormat = Number(item.amountCrypto) / 100000000;
             let btcFormatFixed = btcFormat.toFixed(7); 
             item.amountCrypto = btcFormatFixed
-            let walletShortTo = item.to.substring(0, 6) + '...'
-            let walletShortFrom = item.from.substring(0, 6) + '...'
+            let walletShortTo = item.to.substring(0, 20)
+            let walletShortFrom = item.from.substring(0, 20)
             item.to = walletShortTo
             item.from = walletShortFrom
         }

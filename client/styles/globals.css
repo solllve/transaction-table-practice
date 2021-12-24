@@ -30,4 +30,6 @@ a {
   display: inline-block;
   position: relative;
   clear: both;
+  font-size: 12px;
+  opacity: 0.5;
 }
