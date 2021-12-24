@@ -76,7 +76,7 @@ const getDate = (item) => {
 
 const searchTransactions = (data, searchTerm) => {
     //const dispatch = useDispatch();
-    if (searchTerm !== '') {
+    if (typeof searchTerm == 'string') {
         let searchResults = data.filter(item => {
             return item.type.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1 || 
             item.status.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1
@@ -140,6 +140,8 @@ const Table = () => {
             //send cleaned data to redux store
             dispatch(loadedAction(true));
             dispatch(fetchApi(transactions));
+            window.sessionStorage.setItem('transactions', JSON.stringify(transactions));
+            //console.log(window.sessionStorage.getItem('transactions'))
             //getData(store.transactions.data)
 
         }).catch(function (error) {
@@ -152,8 +154,10 @@ const Table = () => {
                 let searchTerm = e.target.value;
                 let searchResults = searchTransactions(store.transactions.data, searchTerm)
                 dispatch(fetchApi(searchResults));
-                // console.log(searchResults)
-                //getData(searchResults)
+                if (searchTerm == '') {
+                    let initialData = window.sessionStorage.getItem('transactions');
+                    dispatch(fetchApi(JSON.parse(initialData)));
+                }
                 console.log(searchResults)
             }}></input>
             <ul role="list" className="transaction__list divide-y divide-gray-700">
