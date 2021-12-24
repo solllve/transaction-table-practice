@@ -67,14 +67,18 @@ const getDate = (item) => {
 }
 
 const searchTransactions = (data, searchTerm) => {
-
-    let searchResults = data.filter(item => {
-        return item.type.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1 || 
-        item.status.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1
-    })
-    return searchResults
-
-
+    //const dispatch = useDispatch();
+    if (searchTerm !== '') {
+        let searchResults = data.filter(item => {
+            return item.type.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1 || 
+            item.status.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1
+        })
+        return searchResults
+    }
+    else {
+        return data
+    }
+   // dispatch(fetchApi(searchResults));
 }
   
 const transactionFormat = (data) => {
@@ -113,17 +117,6 @@ const Table = () => {
     let i = 0;
     const store = useSelector(state => state);
     const dispatch = useDispatch();
-    const [dataState, getData] = useState([
-        {
-            "amountCrypto": '',
-            "amountFiat": '',
-            "date": '',
-            "from": '',
-            "status": '',
-            "to": '',
-            "type": ''
-        }  
-    ]);
     useEffect(() => {
         dispatch(loadedAction(false));
         Promise.all([
@@ -139,19 +132,21 @@ const Table = () => {
             //send cleaned data to redux store
             dispatch(loadedAction(true));
             dispatch(fetchApi(transactions));
-            getData(store.transactions.data)
+            //getData(store.transactions.data)
 
         }).catch(function (error) {
             console.log(error);    
         });
-    }, [dispatch, getData]);
+    }, [dispatch]);
     return (
         <div>
             <input className="searchBar" type="text" placeholder="Search" onChange={(e) => {
                 let searchTerm = e.target.value;
-                let searchResults = searchTransactions(dataState, searchTerm)
+                let searchResults = searchTransactions(store.transactions.data, searchTerm)
+                dispatch(fetchApi(searchResults));
+                // console.log(searchResults)
+                //getData(searchResults)
                 console.log(searchResults)
-                getData(searchResults)
             }}></input>
             <ul role="list" className="transaction__list divide-y divide-gray-700">
             {store.transactions.data.map(item => (
