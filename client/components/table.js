@@ -121,10 +121,25 @@ const arrayOfEthDates = (data) => {
     return web3.eth.getBlock(blockParse)
 }
 
+const rowTemplate = (item, label) => {
+    if (typeof item === 'string') {
+        return (
+            <div className="min-w-0 flex-1 flex items-center">
+                <div className="data__inner">
+                    <span className="label">{label}</span>
+                    <span className="value capitalize">{item}</span>
+                </div>
+            </div>
+        )
+    }
+}
+
+
 const Table = () => {
     let i = 0;
     const store = useSelector(state => state);
     const dispatch = useDispatch();
+    //const dataSession = window.sessionStorage.getItem('transactions');
     useEffect(() => {
         dispatch(loadedAction(false));
         Promise.all([
@@ -140,9 +155,8 @@ const Table = () => {
             //send cleaned data to redux store
             dispatch(loadedAction(true));
             dispatch(fetchApi(transactions));
+            //store the session
             window.sessionStorage.setItem('transactions', JSON.stringify(transactions));
-            //console.log(window.sessionStorage.getItem('transactions'))
-            //getData(store.transactions.data)
 
         }).catch(function (error) {
             console.log(error);    
@@ -163,48 +177,13 @@ const Table = () => {
             <ul role="list" className="transaction__list divide-y divide-gray-700">
             {store.transactions.data.map(item => (
                 <li key={i++} className="py-4 flex">
-                    <div className="min-w-0 flex-1 flex items-center">
-                        <div className="data__inner">
-                            <span className="label">Type:</span>
-                            <span className="value capitalize">{item.type}</span>
-                        </div>
-                    </div>
-                    <div className="min-w-0 flex-1 flex items-center">
-                        <div className="data__inner">
-                            <span className="label">Status:</span>
-                            <span className="value capitalize">{item.status}</span>
-                        </div>
-                    </div>
-                    <div className="min-w-0 flex-1 flex items-center">
-                        <div className="data__inner">
-                            <span className="label">To:</span>
-                            <span className="value">{item.to}</span>
-                        </div>
-                    </div>
-                    <div className="min-w-0 flex-1 flex items-center">
-                        <div className="data__inner">
-                            <span className="label">From:</span>
-                            <span className="value">{item.from}</span>
-                        </div>
-                    </div>
-                    <div className="min-w-0 flex-1 flex items-center">
-                        <div className="data__inner">
-                            <span className="label">Amount (Fiat):</span>
-                            <span className="value">{item.amountFiat}</span>
-                        </div>
-                    </div>
-                    <div className="min-w-0 flex-1 flex items-center">
-                        <div className="data__inner">
-                            <span className="label">Amount (Crypto):</span>
-                            <span className="value">{item.amountCrypto}</span>
-                        </div>
-                    </div>
-                    <div className="min-w-0 flex-1 flex items-center">
-                        <div className="data__inner">
-                            <span className="label">Date:</span>
-                            <span className="value">{item.date}</span>
-                        </div>
-                    </div>
+                    {rowTemplate(item.type, 'Type:')}
+                    {rowTemplate(item.status, 'Status:')}
+                    {rowTemplate(item.to, 'To:')}
+                    {rowTemplate(item.from, 'From:')}
+                    {rowTemplate(item.amountFiat, 'Amount (Fiat):')}
+                    {rowTemplate(item.amountCrypto, 'Amount (Crypto):')}
+                    {rowTemplate(item.date, 'Date:')}
                 </li>
             ))}
             </ul>
