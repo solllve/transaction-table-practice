@@ -27,26 +27,32 @@ const formatDate = (date) => {
     })
 }
 
+const truncateWalletsTo = (to) => {
+    let walletShortTo = to.substring(0, 20)
+    return walletShortTo
+}
+
+const truncateWalletsFrom = (from) => {
+    let walletShortFrom = from.substring(0, 20) 
+    return walletShortFrom
+}
+
 const formatCryptoData = (data) => {
     data.forEach(item => {
         //if eth
         if (web3.utils.isAddress(item.to) || web3.utils.isAddress(item.from)) {
             let ethFormat = web3.utils.fromWei(String(item.amountCrypto), 'ether');
             item.amountCrypto = Number(ethFormat).toFixed(7)
-            let walletShortTo = item.to.substring(0, 20) 
-            let walletShortFrom = item.from.substring(0, 20)
-            item.to = walletShortTo
-            item.from = walletShortFrom 
+            item.to = truncateWalletsTo(item.to)
+            item.from = truncateWalletsFrom(item.from)
         }
         //if btc
         else if (validate(item.to) || validate(item.from)) {
             let btcFormat = Number(item.amountCrypto) / 100000000;
             let btcFormatFixed = btcFormat.toFixed(7); 
             item.amountCrypto = btcFormatFixed
-            let walletShortTo = item.to.substring(0, 20)
-            let walletShortFrom = item.from.substring(0, 20)
-            item.to = walletShortTo
-            item.from = walletShortFrom
+            item.to = truncateWalletsTo(item.to)
+            item.from = truncateWalletsFrom(item.from)
         }
     })
 }
