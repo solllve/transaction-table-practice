@@ -1,6 +1,6 @@
-import React, {useEffect} from 'react';
+import React, { useEffect, useState } from "react";
 import server from "../environment";
-import { fetchApi } from '../redux/store';
+import store, { fetchApi, loadedAction } from '../redux/store';
 import { useDispatch, useSelector } from "react-redux";
 import { validate, getAddressInfo } from 'bitcoin-address-validation';
 import Web3 from 'web3'
@@ -91,11 +91,22 @@ const arrayOfEthDates = (data) => {
 }
 
 const Table = () => {
-
-    const dispatch = useDispatch();
     const store = useSelector(state => state);
-
+    const dispatch = useDispatch();
+    const [count, setCount] = useState(0);
+    const [dataState, getData] = useState([
+        {
+            "amountCrypto": '',
+            "amountFiat": '',
+            "date": '',
+            "from": '',
+            "status": '',
+            "to": '',
+            "type": ''
+        }  
+    ]);
     useEffect(() => {
+        dispatch(loadedAction(false));
         Promise.all([
             fetch(server.ethApiUrl),
             fetch(server.custodialApiUrl),
@@ -107,31 +118,29 @@ const Table = () => {
         }).then(function (data) {
             const transactions = transactionFormat(data)
             //send cleaned data to redux store
-            dispatch(fetchApi(transactions))
-            //console.log(store);
+            //dispatch(loadedAction(true));
+            //dispatch(fetchApi(transactions));
+ 
+            getData(transactions)
         }).catch(function (error) {
-            console.log(error);
-            
+            console.log(error);    
         });
     }, [dispatch]);
-
+    let i = 0;
     return (
         <div>
-            <ul>
-            {store.transactions.data.map(item => (
-                <li>
-                    {item.type}
-                    {item.to}
-                    {item.from}
-                    {item.amountFiat}
-                    {item.amountCrypto}
-                    {item.date}
-                </li>
+            <p>You clicked {count} times</p>
+            <button onClick={() => setCount(count + 1)}>
+                Click me
+            </button>
+            {dataState.map(item => (
+                <div key={i++}>
+                <p>{item.type}</p>
+                </div>
             ))}
-            </ul>
-            
         </div>
     )
+         
 }
 
 export default Table;
