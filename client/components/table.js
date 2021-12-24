@@ -139,29 +139,36 @@ const Table = () => {
     let i = 0;
     const store = useSelector(state => state);
     const dispatch = useDispatch();
-    //const dataSession = window.sessionStorage.getItem('transactions');
     useEffect(() => {
-        dispatch(loadedAction(false));
-        Promise.all([
-            fetch(server.ethApiUrl),
-            fetch(server.custodialApiUrl),
-            fetch(server.btcApiUrl)
-        ]).then(function (responses) {
-            return Promise.all(responses.map(function (response) {
-                return response.json()
-            }));
-        }).then(function (data) {
-            const transactions = transactionFormat(data)
-            //send cleaned data to redux store
-            dispatch(loadedAction(true));
-            dispatch(fetchApi(transactions));
-            //store the session
-            window.sessionStorage.setItem('transactions', JSON.stringify(transactions));
-
-        }).catch(function (error) {
-            console.log(error);    
-        });
+        const initialData = window.sessionStorage.getItem('transactions');
+        if (initialData !== null) {
+            dispatch(fetchApi(JSON.parse(initialData)));
+        }
+        else {
+            dispatch(loadedAction(false));
+            Promise.all([
+                fetch(server.ethApiUrl),
+                fetch(server.custodialApiUrl),
+                fetch(server.btcApiUrl)
+            ]).then(function (responses) {
+                return Promise.all(responses.map(function (response) {
+                    return response.json()
+                }));
+            }).then(function (data) {
+                const transactions = transactionFormat(data)
+                //send cleaned data to redux store
+                dispatch(loadedAction(true));
+                dispatch(fetchApi(transactions));
+                //store the session
+                window.sessionStorage.setItem('transactions', JSON.stringify(transactions));
+            }).catch(function (error) {
+                console.log(error);    
+            });
+        }
+       
     }, [dispatch]);
+
+
     return (
         <div>
             <input className="searchBar" type="text" placeholder="Search" onChange={(e) => {
@@ -169,7 +176,7 @@ const Table = () => {
                 let searchResults = searchTransactions(store.transactions.data, searchTerm)
                 dispatch(fetchApi(searchResults));
                 if (searchTerm == '') {
-                    let initialData = window.sessionStorage.getItem('transactions');
+                    const initialData = window.sessionStorage.getItem('transactions');
                     dispatch(fetchApi(JSON.parse(initialData)));
                 }
                 console.log(searchResults)
