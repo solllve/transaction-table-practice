@@ -93,7 +93,6 @@ const arrayOfEthDates = (data) => {
 const Table = () => {
     const store = useSelector(state => state);
     const dispatch = useDispatch();
-    const [count, setCount] = useState(0);
     const [dataState, getData] = useState([
         {
             "amountCrypto": '',
@@ -118,8 +117,8 @@ const Table = () => {
         }).then(function (data) {
             const transactions = transactionFormat(data)
             //send cleaned data to redux store
-            //dispatch(loadedAction(true));
-            //dispatch(fetchApi(transactions));
+            dispatch(loadedAction(true));
+            dispatch(fetchApi(transactions));
  
             getData(transactions)
         }).catch(function (error) {
@@ -129,15 +128,19 @@ const Table = () => {
     let i = 0;
     return (
         <div>
-            <p>You clicked {count} times</p>
-            <button onClick={() => setCount(count + 1)}>
-                Click me
-            </button>
+            <ul>
             {dataState.map(item => (
-                <div key={i++}>
-                <p>{item.type}</p>
-                </div>
+                <li key={i++}>
+                    <span>{item.type}</span>
+                    <span>{item.status}</span>
+                    <span>{item.to}</span>
+                    <span>{item.from}</span>
+                    <span>{item.amountFiat}</span>
+                    <span>{item.amountCrypto}</span>
+                    <span>{item.date}</span>
+                </li>
             ))}
+            </ul>
         </div>
     )
          
