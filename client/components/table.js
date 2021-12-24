@@ -57,6 +57,13 @@ const getDate = (item) => {
         return 'no date found'
     }
 }
+
+const searchTransactions = (data, searchTerm) => {
+    let searchResults = data.filter(item => {
+        return item.type.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1
+    })
+    return searchResults
+}
   
 const transactionFormat = (data) => {
     const rawData = data[0].concat(data[1], data[2]);
@@ -119,7 +126,6 @@ const Table = () => {
             //send cleaned data to redux store
             dispatch(loadedAction(true));
             dispatch(fetchApi(transactions));
- 
             getData(transactions)
         }).catch(function (error) {
             console.log(error);    
@@ -128,6 +134,12 @@ const Table = () => {
     let i = 0;
     return (
         <div>
+            <input type="text" placeholder="Search" onChange={(e) => {
+                let searchTerm = e.target.value;
+                let searchResults = searchTransactions(dataState, searchTerm)
+                getData(searchResults)
+            }}></input>
+
             <ul>
             {dataState.map(item => (
                 <li key={i++}>
