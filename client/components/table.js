@@ -33,12 +33,20 @@ const formatCryptoData = (data) => {
         if (web3.utils.isAddress(item.to) || web3.utils.isAddress(item.from)) {
             let ethFormat = web3.utils.fromWei(String(item.amountCrypto), 'ether');
             item.amountCrypto = Number(ethFormat).toFixed(7)
+            let walletShortTo = item.to.substring(0, 6) + '...'
+            let walletShortFrom = item.from.substring(0, 6) + '...'
+            item.to = walletShortTo
+            item.from = walletShortFrom  
         }
         //if btc
         else if (validate(item.to) || validate(item.from)) {
             let btcFormat = Number(item.amountCrypto) / 100000000;
             let btcFormatFixed = btcFormat.toFixed(7); 
             item.amountCrypto = btcFormatFixed
+            let walletShortTo = item.to.substring(0, 6) + '...'
+            let walletShortFrom = item.from.substring(0, 6) + '...'
+            item.to = walletShortTo
+            item.from = walletShortFrom
         }
     })
 }
@@ -144,13 +152,48 @@ const Table = () => {
             <ul role="list" className="transaction__list divide-y divide-gray-700">
             {dataState.map(item => (
                 <li key={i++} className="py-4 flex">
-                    <span className="min-w-0 flex-1 flex items-center">{item.type}</span>
-                    <span className="min-w-0 flex-1 flex items-center">{item.status}</span>
-                    <span className="min-w-0 flex-1 flex items-center">{item.to}</span>
-                    <span className="min-w-0 flex-1 flex items-center">{item.from}</span>
-                    <span className="min-w-0 flex-1 flex items-center">{item.amountFiat}</span>
-                    <span className="min-w-0 flex-1 flex items-center">{item.amountCrypto}</span>
-                    <span className="min-w-0 flex-1 flex items-center">{item.date}</span>
+                    <div className="min-w-0 flex-1 flex items-center">
+                        <div className="data__inner">
+                            <span className="label">Type:</span>
+                            {item.type}
+                        </div>
+                    </div>
+                    <div className="min-w-0 flex-1 flex items-center">
+                        <div className="data__inner">
+                            <span className="label">Status:</span>
+                            {item.status}
+                        </div>
+                    </div>
+                    <div className="min-w-0 flex-1 flex items-center">
+                        <div className="data__inner">
+                            <span className="label">To:</span>
+                            {item.to}
+                        </div>
+                    </div>
+                    <div className="min-w-0 flex-1 flex items-center">
+                        <div className="data__inner">
+                            <span className="label">From:</span>
+                            {item.from}
+                        </div>
+                    </div>
+                    <div className="min-w-0 flex-1 flex items-center">
+                        <div className="data__inner">
+                            <span className="label">Amount (Fiat):</span>
+                            {item.amountFiat}
+                        </div>
+                    </div>
+                    <div className="min-w-0 flex-1 flex items-center">
+                        <div className="data__inner">
+                            <span className="label">Amount (Crypto):</span>
+                            {item.amountCrypto}
+                        </div>
+                    </div>
+                    <div className="min-w-0 flex-1 flex items-center">
+                        <div className="data__inner">
+                            <span className="label">Date:</span>
+                            {item.date}
+                        </div>
+                    </div>
                 </li>
             ))}
             </ul>

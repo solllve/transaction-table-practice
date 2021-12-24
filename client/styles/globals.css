@@ -20,3 +20,14 @@ a {
 * {
   box-sizing: border-box;
 }
+.data__inner {
+  position: relative;
+  width: 100%;
+  padding: 0px 15px 0px 15px;
+}
+.label {
+  width: 100%;
+  display: inline-block;
+  position: relative;
+  clear: both;
+}
