@@ -33,3 +33,6 @@ a {
   font-size: 12px;
   opacity: 0.5;
 }
+.value {
+  word-wrap: break-word;
+}

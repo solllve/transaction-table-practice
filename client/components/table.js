@@ -33,13 +33,10 @@ const formatCryptoData = (data) => {
         if (web3.utils.isAddress(item.to) || web3.utils.isAddress(item.from)) {
             let ethFormat = web3.utils.fromWei(String(item.amountCrypto), 'ether');
             item.amountCrypto = Number(ethFormat).toFixed(7)
-     
-                let walletShortTo = item.to.substring(0, 20) 
-                let walletShortFrom = item.from.substring(0, 20)
-                item.to = walletShortTo
-                item.from = walletShortFrom 
-            
-             
+            let walletShortTo = item.to.substring(0, 20) 
+            let walletShortFrom = item.from.substring(0, 20)
+            item.to = walletShortTo
+            item.from = walletShortFrom 
         }
         //if btc
         else if (validate(item.to) || validate(item.from)) {
@@ -158,43 +155,43 @@ const Table = () => {
                     <div className="min-w-0 flex-1 flex items-center">
                         <div className="data__inner">
                             <span className="label">Type:</span>
-                            {item.type}
+                            <span className="value">{item.type}</span>
                         </div>
                     </div>
                     <div className="min-w-0 flex-1 flex items-center">
                         <div className="data__inner">
                             <span className="label">Status:</span>
-                            {item.status}
+                            <span className="value">{item.status}</span>
                         </div>
                     </div>
                     <div className="min-w-0 flex-1 flex items-center">
                         <div className="data__inner">
                             <span className="label">To:</span>
-                            {item.to}
+                            <span className="value">{item.to}</span>
                         </div>
                     </div>
                     <div className="min-w-0 flex-1 flex items-center">
                         <div className="data__inner">
                             <span className="label">From:</span>
-                            {item.from}
+                            <span className="value">{item.from}</span>
                         </div>
                     </div>
                     <div className="min-w-0 flex-1 flex items-center">
                         <div className="data__inner">
                             <span className="label">Amount (Fiat):</span>
-                            {item.amountFiat}
+                            <span className="value">{item.amountFiat}</span>
                         </div>
                     </div>
                     <div className="min-w-0 flex-1 flex items-center">
                         <div className="data__inner">
                             <span className="label">Amount (Crypto):</span>
-                            {item.amountCrypto}
+                            <span className="value">{item.amountCrypto}</span>
                         </div>
                     </div>
                     <div className="min-w-0 flex-1 flex items-center">
                         <div className="data__inner">
                             <span className="label">Date:</span>
-                            {item.date}
+                            <span className="value">{item.date}</span>
                         </div>
                     </div>
                 </li>
