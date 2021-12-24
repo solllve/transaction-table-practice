@@ -74,12 +74,18 @@ const getDate = (item) => {
     }
 }
 
+
 const searchTransactions = (data, searchTerm) => {
     //const dispatch = useDispatch();
-    if (typeof searchTerm == 'string') {
+    if (typeof searchTerm !== '') {
+        let searchTermLower = searchTerm.toLowerCase();
         let searchResults = data.filter(item => {
-            return item.type.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1 || 
-            item.status.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1
+            const searchItem = (item) => {
+                if (item !== undefined) {
+                    return item.toLowerCase().indexOf(searchTermLower) !== -1
+                }
+            }
+            return searchItem(item.type) || searchItem(item.date) || searchItem(item.from) || searchItem(item.to) || searchItem(item.status) || searchItem(item.amountFiat) || searchItem(item.amountCrypto)
         })
         return searchResults
     }
