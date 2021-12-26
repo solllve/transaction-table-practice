@@ -30,6 +30,7 @@ const truncateWallets = (data) => {
 }
 const formatCryptoData = (data) => {
     data.forEach(item => {
+        let coin = 'BTC'
         //if eth
         if (web3.utils.isAddress(item.to) || web3.utils.isAddress(item.from)) {
             let ethFormat = web3.utils.fromWei(String(item.amountCrypto), 'ether');
@@ -50,6 +51,17 @@ const formatCryptoData = (data) => {
 const formatStatus = (data) => {
     if (typeof data === 'string') {
         return data.toLowerCase()
+    }
+}
+const getCoin = (coin, to, from) => {
+    if (typeof coin === 'string') {
+        return coin
+    }
+    else if (web3.utils.isAddress(to) || web3.utils.isAddress(from)) {
+        return 'ETH'
+    }
+    else {
+        return 'USD'
     }
 }
 const getDate = (item) => {
@@ -76,7 +88,7 @@ const searchTransactions = (data, searchTerm) => {
                     return item.toLowerCase().indexOf(searchTermLower) !== -1
                 }
             }
-            return searchItem(item.type) || searchItem(item.date) || searchItem(item.from) || searchItem(item.to) || searchItem(item.status) || searchItem(item.amountFiat) || searchItem(item.amountCrypto)
+            return searchItem(item.type) || searchItem(item.date) || searchItem(item.from) || searchItem(item.to) || searchItem(item.status) || searchItem(item.amountFiat) || searchItem(item.amountCrypto) || searchItem(item.coin)
         })
         return searchResults
     }
@@ -87,11 +99,12 @@ const searchTransactions = (data, searchTerm) => {
 }
 const transactionFormat = (data) => {
     const rawData = data[0].concat(data[1], data[2]);
-    //console.log(rawData);
+    console.log(rawData);
     const cleanedData = []
     rawData.forEach(item => {
         cleanedData.push({
             type: formatStatus(item.type),
+            coin: getCoin(item.coin, item.to, item.from),
             to: item.to,
             from: item.from,
             amountFiat: item.fiatValue,
@@ -121,6 +134,16 @@ const rowTemplate = (item, label) => {
                 <div className="data__inner">
                     <span className="label">{label}</span>
                     <span className="value capitalize">{item}</span>
+                </div>
+            </div>
+        )
+    }
+    else {
+        return (
+            <div className="min-w-0 flex-1 flex items-center">
+                <div className="data__inner">
+                    <span className="label">{label}</span>
+                    <span className="value"> - </span>
                 </div>
             </div>
         )
@@ -178,6 +201,7 @@ const Table = () => {
             {store.transactions.data.map(item => (
                 <li key={i++} className="py-4 flex">
                     {rowTemplate(item.type, 'Type:')}
+                    {rowTemplate(item.coin, 'Coin:')}
                     {rowTemplate(item.status, 'Status:')}
                     {rowTemplate(item.to, 'To:')}
                     {rowTemplate(item.from, 'From:')}
