@@ -81,26 +81,26 @@ function getTransactions(state = {data: []}, action) {
                     }
                     return 0;
                 case 'Amount (Fiat)':
-                    if (a.from < b.from) {
+                    if (a.amountFiat < b.amountFiat) {
                         return -1;
                     }
-                    if (a.from > b.from) {
+                    if (a.amountFiat > b.amountFiat) {
                         return 1;
                     }
                     return 0;
                 case 'Amount (Crypto)':
-                    if (a.from < b.from) {
+                    if (a.amountCrypto < b.amountCrypto) {
                         return -1;
                     }
-                    if (a.from > b.from) {
+                    if (a.amountCrypto > b.amountCrypto) {
                         return 1;
                     }
                     return 0;
                 case 'Date':
-                    if (a.from < b.from) {
+                    if (a.date < b.date) {
                         return -1;
                     }
-                    if (a.from > b.from) {
+                    if (a.date > b.date) {
                         return 1;
                     }
                     return 0;

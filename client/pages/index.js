@@ -5,7 +5,6 @@ import Table from '../components/table'
 export default function Home() {
   return (
     <div className="dark">
-      <h2>My transactions</h2>
       <Table></Table>
     </div>
   )

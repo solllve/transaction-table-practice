@@ -55,3 +55,29 @@ a {
   padding: 25px;
   margin-right: 25px;
 }
+input.searchBar {
+  border-bottom: solid 1px #e6e6e6;
+  background: none;
+  display: inline-block;
+  min-width: 430px;
+}
+
+/* Chrome replacements */
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+  transition: background-color 5000s ease-in-out 0s;
+  -webkit-text-fill-color: #F6F6F6;
+}
+input:focus,
+select:focus,
+textarea:focus,
+button:focus {
+    outline: none;
+}
