@@ -154,7 +154,7 @@ const headerTemplate = (label) => {
         return (
             <div className="min-w-0 flex-1 flex items-center">
                 <div className="data__inner">
-                    <span onClick={() => dispatch(sortData())} className="label header__link">{label}</span>
+                    <span onClick={() => dispatch(sortData(label))} className="label header__link">{label}</span>
                 </div>
             </div>
         )
