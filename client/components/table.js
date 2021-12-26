@@ -1,6 +1,6 @@
 import React, { useEffect, useState, setState } from "react";
 import server from "../environment";
-import store, { fetchApi, loadedAction } from '../redux/store';
+import store, { fetchApi, loadedAction, sortData } from '../redux/store';
 import { useDispatch, useSelector } from "react-redux";
 import { validate, getAddressInfo } from 'bitcoin-address-validation';
 import Web3 from 'web3'
@@ -149,6 +149,17 @@ const rowTemplate = (item, label) => {
         )
     }
 }
+const headerTemplate = (label) => {
+    const dispatch = useDispatch();
+        return (
+            <div className="min-w-0 flex-1 flex items-center">
+                <div className="data__inner">
+                    <span onClick={() => dispatch(sortData())} className="label header__link">{label}</span>
+                </div>
+            </div>
+        )
+}
+
 const Table = () => {
     let i = 0;
     const store = useSelector(state => state);
@@ -198,6 +209,16 @@ const Table = () => {
                 </div>
             </div>
             <ul role="list" className="transaction__list divide-y divide-gray-700">
+                <li className="py-4 flex">
+                {headerTemplate('Type')}
+                {headerTemplate('Coin')}
+                {headerTemplate('Status')}
+                {headerTemplate('To')}
+                {headerTemplate('From')}
+                {headerTemplate('Amount (Fiat)')}
+                {headerTemplate('Amount (Crypto)')}
+                {headerTemplate('Date')}
+                </li>
             {store.transactions.data.map(item => (
                 <li key={i++} className="py-4 flex">
                     {rowTemplate(item.type, 'Type:')}

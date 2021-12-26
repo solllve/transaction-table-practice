@@ -39,6 +39,12 @@ a {
 .capitalize {
   text-transform: capitalize;
 }
+.header__link {
+  text-decoration: underline;
+  cursor: pointer;
+  display: inline-block;
+  width: inherit!important;
+}
 .header {
   display: flex;
   width: 100%;
