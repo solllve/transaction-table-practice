@@ -81,21 +81,12 @@ function getTransactions(state = {data: []}, action) {
                     }
                     return 0;
                 case 'Amount (Fiat)':
-                    if (a.amountFiat < b.amountFiat) {
-                        return -1;
-                    }
-                    if (a.amountFiat > b.amountFiat) {
-                        return 1;
-                    }
-                    return 0;
+                    return a.amountFiat - b.amountFiat;
                 case 'Amount (Crypto)':
-                    if (a.amountCrypto < b.amountCrypto) {
-                        return -1;
-                    }
-                    if (a.amountCrypto > b.amountCrypto) {
-                        return 1;
-                    }
-                    return 0;
+                    let numeralA = Math.floor(Number(a.amountCrypto * 100000000))
+                    let numeralB = Math.floor(Number(b.amountCrypto * 100000000))
+                    console.log(numeralA)
+                    return numeralA - numeralB;
                 case 'Date':
                     if (a.date < b.date) {
                         return -1;

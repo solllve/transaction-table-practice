@@ -13,15 +13,25 @@ const getEthTimestamp = (blockNum) => {
         return data.timestamp
     });
 }
+const formatDateRaw = (date) => {
+    if (typeof date === 'number') {
+        let timeConvert = String(date) + '000';
+        return Number(timeConvert);
+    }
+    else {
+        let parseDate = Date.parse(date);
+        return parseDate;
+    }
+}
 const sortByDecendingDate = (data) => {
     data.sort((a, b) => {
-        return b.date - a.date
+        return b.date.raw - a.date.raw
     })
 }
 const formatDate = (date) => {
     date.forEach(item => {
-        let dateParse = new Date(item.date).toLocaleDateString("en-US")
-        item.date = dateParse
+        let dateParse = new Date(item.date.cleaned).toLocaleDateString("en-US")
+        item.date.cleaned = dateParse
     })
 }
 const truncateWallets = (data) => {
@@ -33,16 +43,16 @@ const formatCryptoData = (data) => {
         let coin = 'BTC'
         //if eth
         if (web3.utils.isAddress(item.to) || web3.utils.isAddress(item.from)) {
-            let ethFormat = web3.utils.fromWei(String(item.amountCrypto), 'ether');
-            item.amountCrypto = Number(ethFormat).toFixed(7)
+            let ethFormat = web3.utils.fromWei(String(item.amount.crypto), 'ether');
+            item.amount.crypto = Number(ethFormat).toFixed(7)
             item.to = truncateWallets(item.to)
             item.from = truncateWallets(item.from)
         }
         //if btc
         else if (validate(item.to) || validate(item.from)) {
-            let btcFormat = Number(item.amountCrypto) / 100000000;
+            let btcFormat = Number(item.amount.crypto) / 100000000;
             let btcFormatFixed = btcFormat.toFixed(7); 
-            item.amountCrypto = btcFormatFixed
+            item.amount.crypto = btcFormatFixed
             item.to = truncateWallets(item.to)
             item.from = truncateWallets(item.from)
         }
@@ -88,7 +98,7 @@ const searchTransactions = (data, searchTerm) => {
                     return item.toLowerCase().indexOf(searchTermLower) !== -1
                 }
             }
-            return searchItem(item.type) || searchItem(item.date) || searchItem(item.from) || searchItem(item.to) || searchItem(item.status) || searchItem(item.amountFiat) || searchItem(item.amountCrypto) || searchItem(item.coin)
+            return searchItem(item.type) || searchItem(item.date.cleaned) || searchItem(item.from) || searchItem(item.to) || searchItem(item.status) || searchItem(item.amount.fiat) || searchItem(item.amount.crypto) || searchItem(item.coin)
         })
         return searchResults
     }
@@ -99,7 +109,7 @@ const searchTransactions = (data, searchTerm) => {
 }
 const transactionFormat = (data) => {
     const rawData = data[0].concat(data[1], data[2]);
-    console.log(rawData);
+    //console.log(rawData);
     const cleanedData = []
     rawData.forEach(item => {
         cleanedData.push({
@@ -109,11 +119,19 @@ const transactionFormat = (data) => {
             from: item.from,
             amountFiat: item.fiatValue,
             amountCrypto: item.amount,
-            date: getDate(item),
+            amount: {
+                fiat: item.fiatValue,
+                crypto: item.amount
+            },
+            date: {
+                cleaned: getDate(item),
+                raw: formatDateRaw(item.createdAt || item.insertedAt || item.date)
+            },
             status: formatStatus(item.state)
         })
     })
     //order of operations
+    //console.log(cleanedData);
     sortByDecendingDate(cleanedData)
     formatDate(cleanedData)
     formatCryptoData(cleanedData)
@@ -128,7 +146,7 @@ const arrayOfEthDates = (data) => {
     return web3.eth.getBlock(blockParse)
 }
 const rowTemplate = (item, label) => {
-    if (typeof item === 'string') {
+    if (typeof item === 'string' || typeof item === 'number') {
         return (
             <div className="min-w-0 flex-1 flex items-center">
                 <div className="data__inner">
@@ -151,13 +169,13 @@ const rowTemplate = (item, label) => {
 }
 const headerTemplate = (label) => {
     const dispatch = useDispatch();
-        return (
-            <div className="min-w-0 flex-1 flex items-center">
-                <div className="data__inner">
-                    <span onClick={() => dispatch(sortData(label))} className="label header__link">{label}</span>
-                </div>
+    return (
+        <div className="min-w-0 flex-1 flex items-center">
+            <div className="data__inner">
+                <span onClick={() => dispatch(sortData(label))} className="label header__link">{label}</span>
             </div>
-        )
+        </div>
+    )
 }
 
 const Table = () => {
@@ -166,10 +184,10 @@ const Table = () => {
     const dispatch = useDispatch();
     useEffect(() => {
         const initialData = window.sessionStorage.getItem('transactions');
-        if (initialData !== null) {
-            dispatch(fetchApi(JSON.parse(initialData)));
-        }
-        else {
+        // if (initialData !== null) {
+        //     dispatch(fetchApi(JSON.parse(initialData)));
+        // }
+        // else {
             dispatch(loadedAction(false));
             Promise.all([
                 fetch(server.ethApiUrl),
@@ -189,7 +207,7 @@ const Table = () => {
             }).catch(function (error) {
                 console.log(error);    
             });
-        }
+        // }
        
     }, [dispatch]);
     return (
@@ -226,9 +244,9 @@ const Table = () => {
                     {rowTemplate(item.status, 'Status:')}
                     {rowTemplate(item.to, 'To:')}
                     {rowTemplate(item.from, 'From:')}
-                    {rowTemplate(item.amountFiat, 'Amount (Fiat):')}
-                    {rowTemplate(item.amountCrypto, 'Amount (Crypto):')}
-                    {rowTemplate(item.date, 'Date:')}
+                    {rowTemplate(item.amount.fiat, 'Amount (Fiat):')}
+                    {rowTemplate(item.amount.crypto, 'Amount (Crypto):')}
+                    {rowTemplate(item.date.cleaned, 'Date:')}
                 </li>
             ))}
             </ul>
