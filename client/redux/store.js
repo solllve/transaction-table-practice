@@ -81,10 +81,15 @@ function getTransactions(state = {data: []}, action) {
                         return 1;
                     }
                     return 0;
-                case 'Amount (Fiat)':
-                    return Number(a.transaction.fiat) - Number(b.transaction.fiat);
-                case 'Amount (Crypto)':
-                    return a.transaction.raw - b.transaction.raw;
+                case 'Amount':
+                    //not sure if it should sort by amount by USD calculation, or coin type.
+                    if (a.coin < b.coin) {
+                        return -1;
+                    }
+                    if (a.coin > b.coin) {
+                        return 1;
+                    }
+                    return 0;
                 case 'Date':
                     return a.date.raw - b.date.raw;
             }    
