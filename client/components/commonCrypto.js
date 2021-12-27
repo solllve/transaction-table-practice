@@ -2,6 +2,7 @@ import Web3 from 'web3'
 import { validate, getAddressInfo } from 'bitcoin-address-validation';
 import { truncateWallets } from './common';
 const web3 = new Web3(new Web3.providers.HttpProvider('https://cloudflare-eth.com'));
+
 const getEthTimestamp = (blockNum) => {
     let blockParse = Number(blockNum)
     const block = web3.eth.getBlock(blockParse);
@@ -14,7 +15,7 @@ const formatCryptoData = (data) => {
         //if eth
         if (web3.utils.isAddress(item.to) || web3.utils.isAddress(item.from)) { 
             let ethFormat = web3.utils.fromWei(String(item.transaction.crypto), 'ether');
-            item.transaction.crypto = Number(ethFormat).toFixed(7)
+            item.transaction.crypto = Number(ethFormat).toFixed(8)
             item.transaction.raw = Number(item.transaction.crypto)
             item.to = truncateWallets(item.to)
             item.from = truncateWallets(item.from)
@@ -23,7 +24,7 @@ const formatCryptoData = (data) => {
         else if (validate(item.to) || validate(item.from)) {
             let btcFormat = Number(item.transaction.crypto) / 100000000;
             item.transaction.raw = item.transaction.crypto
-            let btcFormatFixed = btcFormat.toFixed(7); 
+            let btcFormatFixed = btcFormat.toFixed(8); 
             item.transaction.crypto = btcFormatFixed
             item.transaction.raw = Number(item.transaction.crypto)
             item.to = truncateWallets(item.to)
@@ -45,10 +46,20 @@ const getCoin = (coin, to, from) => {
 const arrayOfEthDates = (data) => {
     return web3.eth.getBlock(blockParse)
 }
+const getFiat = (fiat) => {
+    if (typeof fiat === 'string') {
+        return fiat
+    }
+    else {
+        // calculate sats & eth to usd
+        return ' - '
+    }
+}
 export {
     web3,
     getEthTimestamp,
     formatCryptoData,
     getCoin,
-    arrayOfEthDates
+    arrayOfEthDates,
+    getFiat
 };

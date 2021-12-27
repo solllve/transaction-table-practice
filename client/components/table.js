@@ -16,7 +16,8 @@ import {
     getEthTimestamp,
     formatCryptoData,
     getCoin,
-    arrayOfEthDates
+    arrayOfEthDates,
+    getFiat
 } from './commonCrypto'
 import {
     rowTemplate,
@@ -33,7 +34,7 @@ const transactionFormat = (data) => {
             to: item.to,
             from: item.from,
             transaction: {
-                fiat: item.fiatValue,
+                fiat: getFiat(item.fiatValue),
                 crypto: item.amount,
                 raw: item.amount
             },
@@ -102,11 +103,9 @@ const Table = () => {
             </div>
             <ul role="list" className="transaction__list divide-y divide-gray-700">
                 <li className="py-4 flex">
+                {headerTemplate('Type')}
                 {headerTemplate('Status')}
                 {headerTemplate('Coin')}
-                {headerTemplate('Type')}
-                
-                
                 {headerTemplate('To')}
                 {headerTemplate('From')}
                 {headerTemplate('Amount (Fiat)')}
@@ -116,11 +115,9 @@ const Table = () => {
             {store.transactions.data.map(item => (
                 
                 <li key={i++} className="py-4 flex">
+                    {rowTemplate(item.type, 'Type:')}
                     {rowTemplate(item.status, 'Status:')}
                     {rowTemplate(item.coin, 'Coin:')}
-                    {rowTemplate(item.type, 'Type:')}
-                    
-                    
                     {rowTemplate(item.to, 'To:')}
                     {rowTemplate(item.from, 'From:')}
                     {rowTemplate(item.transaction.fiat, 'Amount (Fiat):')}

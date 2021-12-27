@@ -38,10 +38,8 @@ function getTransactions(state = {data: []}, action) {
     }
     if (action.type === 'sortDataAction') {
         const sortData = [...state.data]
-
         sortData.sort(function(a, b) {
         //admittedly a very silly way of doing this. Might clean up later.
-
             switch(action.payload.item) {
                 case 'Type':
                     if (a.type < b.type) {
@@ -89,12 +87,8 @@ function getTransactions(state = {data: []}, action) {
                     return a.transaction.raw - b.transaction.raw;
                 case 'Date':
                     return a.date.raw - b.date.raw;
-            } 
-            
-            
+            }    
         });
-
-
         return {data: sortData}
     }
     return state
