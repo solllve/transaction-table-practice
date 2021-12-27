@@ -39,8 +39,6 @@ function getTransactions(state = {data: []}, action) {
     if (action.type === 'sortDataAction') {
         const sortData = [...state.data]
 
-
-
         sortData.sort(function(a, b) {
         //admittedly a very silly way of doing this. Might clean up later.
 
