@@ -2,6 +2,7 @@ import React, { useEffect, useState, setState } from "react";
 import server from "../environment";
 import store, { fetchApi, loadedAction, sortData } from '../redux/store';
 import { useDispatch, useSelector } from "react-redux";
+
 import {
     formatDateRaw, 
     sortByDecendingDate, 
@@ -9,7 +10,8 @@ import {
     truncateWallets, 
     formatStatus,
     getDate,
-    searchTransactions
+    searchTransactions,
+    determineAmount
 } from './common'
 import {
     web3,
@@ -108,8 +110,7 @@ const Table = () => {
                 {headerTemplate('Coin')}
                 {headerTemplate('To')}
                 {headerTemplate('From')}
-                {headerTemplate('Amount (Fiat)')}
-                {headerTemplate('Amount (Crypto)')}
+                {headerTemplate('Amount')}
                 {headerTemplate('Date')}
                 </li>
             {store.transactions.data.map(item => (
@@ -120,8 +121,7 @@ const Table = () => {
                     {rowTemplate(item.coin, 'Coin:')}
                     {rowTemplate(item.to, 'To:')}
                     {rowTemplate(item.from, 'From:')}
-                    {rowTemplate(item.transaction.fiat, 'Amount (Fiat):')}
-                    {rowTemplate(item.transaction.crypto, 'Amount (Crypto):')}
+                    {rowTemplate(determineAmount(item.transaction), 'Amount:')}
                     {rowTemplate(item.date.cleaned, 'Date:')}
                 </li>
             ))}

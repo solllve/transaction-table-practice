@@ -87,6 +87,15 @@ const transactionFormat = (data) => {
     console.log(cleanedData);
     return cleanedData
 }
+const determineAmount = (data) => {
+    if (typeof data.crypto === 'string') {
+        return data.crypto
+    }
+    else {
+        return '$' + data.fiat
+    }
+    
+}
 export {
     formatDateRaw, 
     sortByDecendingDate,
@@ -95,5 +104,6 @@ export {
     truncateWallets,
     formatStatus,
     searchTransactions,
-    transactionFormat
+    transactionFormat,
+    determineAmount
 };
