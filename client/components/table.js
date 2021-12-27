@@ -42,17 +42,20 @@ const formatCryptoData = (data) => {
     data.forEach(item => {
         let coin = 'BTC'
         //if eth
-        if (web3.utils.isAddress(item.to) || web3.utils.isAddress(item.from)) {
-            let ethFormat = web3.utils.fromWei(String(item.amount.crypto), 'ether');
-            item.amount.crypto = Number(ethFormat).toFixed(7)
+        if (web3.utils.isAddress(item.to) || web3.utils.isAddress(item.from)) { 
+            let ethFormat = web3.utils.fromWei(String(item.transaction.crypto), 'ether');
+            item.transaction.crypto = Number(ethFormat).toFixed(7)
+            item.transaction.raw = Number(item.transaction.crypto)
             item.to = truncateWallets(item.to)
             item.from = truncateWallets(item.from)
         }
         //if btc
         else if (validate(item.to) || validate(item.from)) {
-            let btcFormat = Number(item.amount.crypto) / 100000000;
+            let btcFormat = Number(item.transaction.crypto) / 100000000;
+            item.transaction.raw = item.transaction.crypto
             let btcFormatFixed = btcFormat.toFixed(7); 
-            item.amount.crypto = btcFormatFixed
+            item.transaction.crypto = btcFormatFixed
+            item.transaction.raw = Number(item.transaction.crypto)
             item.to = truncateWallets(item.to)
             item.from = truncateWallets(item.from)
         }
@@ -98,7 +101,7 @@ const searchTransactions = (data, searchTerm) => {
                     return item.toLowerCase().indexOf(searchTermLower) !== -1
                 }
             }
-            return searchItem(item.type) || searchItem(item.date.cleaned) || searchItem(item.from) || searchItem(item.to) || searchItem(item.status) || searchItem(item.amount.fiat) || searchItem(item.amount.crypto) || searchItem(item.coin)
+            return searchItem(item.type) || searchItem(item.date.cleaned) || searchItem(item.from) || searchItem(item.to) || searchItem(item.status) || searchItem(item.transaction.fiat) || searchItem(item.transaction.crypto) || searchItem(item.coin)
         })
         return searchResults
     }
@@ -117,11 +120,10 @@ const transactionFormat = (data) => {
             coin: getCoin(item.coin, item.to, item.from),
             to: item.to,
             from: item.from,
-            amountFiat: item.fiatValue,
-            amountCrypto: item.amount,
-            amount: {
+            transaction: {
                 fiat: item.fiatValue,
-                crypto: item.amount
+                crypto: item.amount,
+                raw: item.amount
             },
             date: {
                 cleaned: getDate(item),
@@ -131,10 +133,10 @@ const transactionFormat = (data) => {
         })
     })
     //order of operations
-    //console.log(cleanedData);
     sortByDecendingDate(cleanedData)
     formatDate(cleanedData)
     formatCryptoData(cleanedData)
+    console.log(cleanedData);
     return cleanedData
 }
 const rawDataCount = (data) => {
@@ -172,7 +174,7 @@ const headerTemplate = (label) => {
     return (
         <div className="min-w-0 flex-1 flex items-center">
             <div className="data__inner">
-                <span onClick={() => dispatch(sortData(label))} className="label header__link">{label}</span>
+                <span onClick={() => dispatch(sortData(label, 'desc'))} className="label header__link">{label}</span>
             </div>
         </div>
     )
@@ -244,8 +246,8 @@ const Table = () => {
                     {rowTemplate(item.status, 'Status:')}
                     {rowTemplate(item.to, 'To:')}
                     {rowTemplate(item.from, 'From:')}
-                    {rowTemplate(item.amount.fiat, 'Amount (Fiat):')}
-                    {rowTemplate(item.amount.crypto, 'Amount (Crypto):')}
+                    {rowTemplate(item.transaction.fiat, 'Amount (Fiat):')}
+                    {rowTemplate(item.transaction.crypto, 'Amount (Crypto):')}
                     {rowTemplate(item.date.cleaned, 'Date:')}
                 </li>
             ))}

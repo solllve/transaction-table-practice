@@ -8,10 +8,11 @@ export const fetchApi = data => ({
     }
 })
 
-export const sortData = item => ({
+export const sortData = (item, sortOrder) => ({
     type: 'sortDataAction',
     payload: {
-        item
+        item,
+        sortOrder
     }
 })
 
@@ -37,8 +38,12 @@ function getTransactions(state = {data: []}, action) {
     }
     if (action.type === 'sortDataAction') {
         const sortData = [...state.data]
+
+
+
         sortData.sort(function(a, b) {
         //admittedly a very silly way of doing this. Might clean up later.
+
             switch(action.payload.item) {
                 case 'Type':
                     if (a.type < b.type) {
@@ -81,22 +86,17 @@ function getTransactions(state = {data: []}, action) {
                     }
                     return 0;
                 case 'Amount (Fiat)':
-                    return a.amountFiat - b.amountFiat;
+                    return Number(a.transaction.fiat) - Number(b.transaction.fiat);
                 case 'Amount (Crypto)':
-                    let numeralA = Math.floor(Number(a.amountCrypto * 100000000))
-                    let numeralB = Math.floor(Number(b.amountCrypto * 100000000))
-                    console.log(numeralA)
-                    return numeralA - numeralB;
+                    return a.transaction.raw - b.transaction.raw;
                 case 'Date':
-                    if (a.date < b.date) {
-                        return -1;
-                    }
-                    if (a.date > b.date) {
-                        return 1;
-                    }
-                    return 0;
-            }    
+                    return a.date.raw - b.date.raw;
+            } 
+            
+            
         });
+
+
         return {data: sortData}
     }
     return state
