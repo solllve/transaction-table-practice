@@ -11,6 +11,7 @@
     "test:coverage": "jest --coverage"
   },
   "dependencies": {
+    "material-icons": "^1.10.4",
     "next": "12.0.7",
     "react": "17.0.2",
     "react-dom": "17.0.2",

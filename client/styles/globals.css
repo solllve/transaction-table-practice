@@ -64,6 +64,11 @@ input.searchBar {
   display: inline-block;
   min-width: 430px;
 }
+.transaction__icon .material-icons {
+  position: relative;
+  top: 5px;
+  margin-right: 5px;
+}
 
 /* Chrome replacements */
 input:-webkit-autofill,

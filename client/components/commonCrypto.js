@@ -1,7 +1,6 @@
 import Web3 from 'web3'
 import { validate, getAddressInfo } from 'bitcoin-address-validation';
 import { truncateWallets } from './common';
-
 const web3 = new Web3(new Web3.providers.HttpProvider('https://cloudflare-eth.com'));
 const getEthTimestamp = (blockNum) => {
     let blockParse = Number(blockNum)
