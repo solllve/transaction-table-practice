@@ -17,6 +17,15 @@ const rowTemplate = (item, label) => {
             else if (item === 'sell') {
                 return <div class="transaction__icon"><span class="material-icons">subdirectory_arrow_right</span> <span className="value capitalize">{item}</span></div>
             }
+            else if (item === 'confirmed') {
+                return <div class="transaction__icon"><span class="material-icons">check</span> <span className="value capitalize">{item}</span></div>
+            }
+            else if (item === 'pending') {
+                return <div class="transaction__icon"><span class="material-icons">update</span> <span className="value capitalize">{item}</span></div>
+            }
+            else if (item === 'finished') {
+                return <div class="transaction__icon"><span class="material-icons">done_all</span> <span className="value capitalize">{item}</span></div>
+            }
             else {
                 return <span className="value capitalize">{item}</span>
             } 

@@ -102,9 +102,11 @@ const Table = () => {
             </div>
             <ul role="list" className="transaction__list divide-y divide-gray-700">
                 <li className="py-4 flex">
-                {headerTemplate('Type')}
-                {headerTemplate('Coin')}
                 {headerTemplate('Status')}
+                {headerTemplate('Coin')}
+                {headerTemplate('Type')}
+                
+                
                 {headerTemplate('To')}
                 {headerTemplate('From')}
                 {headerTemplate('Amount (Fiat)')}
@@ -112,10 +114,13 @@ const Table = () => {
                 {headerTemplate('Date')}
                 </li>
             {store.transactions.data.map(item => (
+                
                 <li key={i++} className="py-4 flex">
-                    {rowTemplate(item.type, 'Type:')}
-                    {rowTemplate(item.coin, 'Coin:')}
                     {rowTemplate(item.status, 'Status:')}
+                    {rowTemplate(item.coin, 'Coin:')}
+                    {rowTemplate(item.type, 'Type:')}
+                    
+                    
                     {rowTemplate(item.to, 'To:')}
                     {rowTemplate(item.from, 'From:')}
                     {rowTemplate(item.transaction.fiat, 'Amount (Fiat):')}
