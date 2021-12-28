@@ -1,3 +1,4 @@
+let defaultBool = false;
 const formatDateRaw = (date) => {
     if (typeof date === 'number') {
         let timeConvert = String(date) + '000';
@@ -8,6 +9,22 @@ const formatDateRaw = (date) => {
         return parseDate;
     }
 }
+
+const sortByData = (a,b) => {
+    defaultBool = !defaultBool;
+    console.log(defaultBool)
+
+    if (a < b) {
+        return -1;
+    }
+    if (a > b) {
+        return 1;
+    }
+    return 0;
+    
+    
+}
+
 const sortByDecendingDate = (data) => {
     data.sort((a, b) => {
         return b.date.raw - a.date.raw
@@ -105,5 +122,6 @@ export {
     formatStatus,
     searchTransactions,
     transactionFormat,
-    determineAmount
+    determineAmount,
+    sortByData
 };

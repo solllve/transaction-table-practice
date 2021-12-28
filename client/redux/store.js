@@ -1,5 +1,9 @@
 import { configureStore, createSlice, nanoid, createAsyncThunk } from "@reduxjs/toolkit";
 import { data } from "autoprefixer";
+import {
+    sortByData
+} from '../components/common'
+let defaultBool = false;
 
 export const fetchApi = data => ({
     type: 'fetchAction',
@@ -38,60 +42,133 @@ function getTransactions(state = {data: []}, action) {
     }
     if (action.type === 'sortDataAction') {
         const sortData = [...state.data]
+        defaultBool = !defaultBool;
         sortData.sort(function(a, b) {
-        //admittedly a very silly way of doing this. Might clean up later.
             switch(action.payload.item) {
                 case 'Type':
-                    if (a.type < b.type) {
-                        return -1;
+                    if (defaultBool) {
+                        if (a.type < b.type) {
+                            return -1;
+                        }
+                        if (a.type > b.type) {
+                            return 1;
+                        }
+                        return 0;
                     }
-                    if (a.type > b.type) {
-                        return 1;
+                    else {
+                        if (a.type < b.type) {
+                            return 1;
+                        }
+                        if (a.type > b.type) {
+                            return -1;
+                        }
+                        return 0;
                     }
-                    return 0;
                 case 'Coin':
-                    if (a.coin < b.coin) {
-                        return -1;
+                    if (defaultBool) {
+                        if (a.coin < b.coin) {
+                            return -1;
+                        }
+                        if (a.coin > b.coin) {
+                            return 1;
+                        }
+                        return 0;
                     }
-                    if (a.coin > b.coin) {
-                        return 1;
+                    else {
+                        if (a.coin < b.coin) {
+                            return 1;
+                        }
+                        if (a.coin > b.coin) {
+                            return -1;
+                        }
+                        return 0;
                     }
-                    return 0;
                 case 'Status':
-                    if (a.status < b.status) {
-                        return -1;
+                    if (defaultBool) {
+                        if (a.status < b.status) {
+                            return -1;
+                        }
+                        if (a.status > b.status) {
+                            return 1;
+                        }
+                        return 0;
                     }
-                    if (a.status > b.status) {
-                        return 1;
+                    else {
+                        if (a.status < b.status) {
+                            return 1;
+                        }
+                        if (a.status > b.status) {
+                            return -1;
+                        }
+                        return 0;
                     }
-                    return 0;
+                    
                 case 'To':
-                    if (a.to < b.to) {
-                        return -1;
+                    if (defaultBool) {
+                        if (a.to < b.to) {
+                            return -1;
+                        }
+                        if (a.to > b.to) {
+                            return 1;
+                        }
+                        return 0;
                     }
-                    if (a.to > b.to) {
-                        return 1;
+                    else {
+                        if (a.to < b.to) {
+                            return 1;
+                        }
+                        if (a.to > b.to) {
+                            return -1;
+                        }
+                        return 0;
                     }
-                    return 0;
                 case 'From':
-                    if (a.from < b.from) {
-                        return -1;
+                    if (defaultBool) {
+                        if (a.from < b.from) {
+                            return -1;
+                        }
+                        if (a.from > b.from) {
+                            return 1;
+                        }
+                        return 0;
                     }
-                    if (a.from > b.from) {
-                        return 1;
+                    else {
+                        if (a.from < b.from) {
+                            return 1;
+                        }
+                        if (a.from > b.from) {
+                            return -1;
+                        }
+                        return 0;
                     }
-                    return 0;
+                    
                 case 'Amount':
-                    //not sure if it should sort by amount by USD calculation, or coin type.
-                    if (a.coin < b.coin) {
-                        return -1;
+                    if (defaultBool) {
+                        if (a.coin < b.coin) {
+                            return -1;
+                        }
+                        if (a.coin > b.coin) {
+                            return 1;
+                        }
+                        return 0;
                     }
-                    if (a.coin > b.coin) {
-                        return 1;
+                    else {
+                        if (a.coin < b.coin) {
+                            return 1;
+                        }
+                        if (a.coin > b.coin) {
+                            return -1;
+                        }
+                        return 0;
                     }
-                    return 0;
                 case 'Date':
-                    return a.date.raw - b.date.raw;
+                    if (defaultBool) {
+                        return a.date.raw - b.date.raw;
+                    }
+                    else {
+                        return b.date.raw - a.date.raw;
+                    }
+                    
             }    
         });
         return {data: sortData}
