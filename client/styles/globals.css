@@ -54,8 +54,13 @@ a {
 }
 .header__inner {
   position: relative;
+  display: flex;
   padding: 25px;
   margin-right: 25px;
+  width: 100%;
+}
+.spacer {
+  flex: 1 1 auto;
 }
 input.searchBar {
   border-bottom: solid 1px #e6e6e6;

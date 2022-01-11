@@ -2,6 +2,7 @@ import React, { useEffect, useState, setState } from "react";
 import server from "../environment";
 import store, { fetchApi, loadedAction, sortData } from '../redux/store';
 import { useDispatch, useSelector } from "react-redux";
+import SortByDropdown from './sortBy';
 
 import {
     formatDateRaw, 
@@ -91,18 +92,21 @@ const Table = () => {
         <div>
             <div className="header">
                 <div className="header__inner">
-                <input className="searchBar" type="text" placeholder="Search" onChange={(e) => {
-                    let searchTerm = e.target.value;
-                    let searchResults = searchTransactions(store.transactions.data, searchTerm)
-                    dispatch(fetchApi(searchResults));
-                    if (searchTerm == '') {
-                        const initialData = window.sessionStorage.getItem('transactions');
-                        dispatch(fetchApi(JSON.parse(initialData)));
-                    }
-                    //console.log(searchResults)
-                }}></input>
+                    <input className="searchBar" type="text" placeholder="Search" onChange={(e) => {
+                        let searchTerm = e.target.value;
+                        let searchResults = searchTransactions(store.transactions.data, searchTerm)
+                        dispatch(fetchApi(searchResults));
+                        if (searchTerm == '') {
+                            const initialData = window.sessionStorage.getItem('transactions');
+                            dispatch(fetchApi(JSON.parse(initialData)));
+                        }
+                        //console.log(searchResults)
+                    }}></input>
+                    <div className="spacer"></div>
+                
                 </div>
             </div>
+
             <ul role="list" className="transaction__list divide-y divide-gray-700">
                 <li className="py-4 flex">
                 {headerTemplate('Type')}
@@ -114,7 +118,6 @@ const Table = () => {
                 {headerTemplate('Date')}
                 </li>
             {store.transactions.data.map(item => (
-                
                 <li key={i++} className="py-4 flex">
                     {rowTemplate(item.type, 'Type:')}
                     {rowTemplate(item.status, 'Status:')}

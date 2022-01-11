@@ -21,10 +21,7 @@ const sortByData = (a,b) => {
         return 1;
     }
     return 0;
-    
-    
 }
-
 const sortByDecendingDate = (data) => {
     data.sort((a, b) => {
         return b.date.raw - a.date.raw
